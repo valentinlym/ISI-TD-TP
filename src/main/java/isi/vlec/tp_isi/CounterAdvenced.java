@@ -1,0 +1,364 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package isi.vlec.tp_isi;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
+/**
+ *
+ * @author vaal
+ */
+public class CounterAdvenced extends javax.swing.JFrame {
+
+    private enum STATE {
+        // START, STOP, RECULE, AVANCE, TIMER_RECULE, TIMER_AVANCE
+        START(true, false, false, false, false, false),
+        RECULE_STOP(false, true, true, false, false, true),
+        AVANCE_STOP(false, true, false, true, true, false);
+
+        private boolean cbStart, cbStop, cbRecule, cbAvance, timerReculeActive, timerAvanceActive;
+
+        private STATE(
+                boolean cbStart,
+                boolean cbStop,
+                boolean cbRecule,
+                boolean cbAvance,
+                boolean timerAvanceActive, boolean timerReculeActive) {
+            this.cbStart = cbStart;
+            this.cbStop = cbStop;
+            this.cbRecule = cbRecule;
+            this.cbAvance = cbAvance;
+            this.timerReculeActive = timerReculeActive;
+            this.timerAvanceActive = timerAvanceActive;
+        }
+
+        public boolean isCbStart() {
+            return cbStart;
+        }
+
+        public boolean isCbStop() {
+            return cbStop;
+        }
+
+        public boolean isCbRecule() {
+            return cbRecule;
+        }
+
+        public boolean isCbAvance() {
+            return cbAvance;
+        }
+
+        public boolean isTimerReculeActive() {
+            return timerReculeActive;
+        }
+
+        public boolean isTimerAvanceActive() {
+            return timerAvanceActive;
+        }
+    }
+
+    private STATE state;
+    public int count;
+
+    private Timer timerReculeIncrement;
+    private Timer timerAvanceIncrement;
+
+    /**
+     * Creates new form CounterAdvenced
+     */
+    public CounterAdvenced() {
+        initComponents();
+        initTimer();
+        initStateMachine();
+    }
+
+    public void initStateMachine() {
+        state = STATE.START;
+        count = 0;
+        activateState(state);
+    }
+
+    public void activateState(STATE toActivate) {
+        cbStart.setEnabled(toActivate.isCbStart());
+        cbStop.setEnabled(toActivate.isCbStop());
+        cbRecule.setEnabled(toActivate.isCbRecule());
+        cbAvance.setEnabled(toActivate.isCbAvance());
+        if (toActivate.timerReculeActive) {
+            timerReculeIncrement.start();
+        } else {
+            timerReculeIncrement.stop();
+        }
+        if (toActivate.timerAvanceActive) {
+            timerAvanceIncrement.start();
+        } else {
+            timerAvanceIncrement.stop();
+        }
+    }
+
+    private void initTimer() {
+        timerReculeIncrement = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timerIncrementActionPerformed(e);
+            }
+        });
+        timerAvanceIncrement = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timerDecrementActionPerformed(e);
+
+            }
+        });
+    }
+
+    private void timerDecrementActionPerformed(ActionEvent evt) {
+        switch (state) {
+            case START:
+            case RECULE_STOP:
+                throw new IllegalStateException("Button timerDecrement cannot be pressed in state " + state);
+            case AVANCE_STOP:
+                state = STATE.AVANCE_STOP;
+                activateState(state);
+                decrement();
+                displayCounter();
+                break;
+        }
+    }
+
+    private void timerIncrementActionPerformed(ActionEvent evt) {
+        switch (state) {
+            case START:
+                throw new IllegalStateException("Button timerIncrement cannot be pressed in state " + state);
+            case RECULE_STOP:
+                state = STATE.RECULE_STOP;
+                activateState(state);
+                increment();
+                displayCounter();
+                break;
+            case AVANCE_STOP:
+                throw new IllegalStateException("Button timerIncrement cannot be pressed in state " + state);
+        }
+    }
+
+    private void initCounter() {
+        this.count = 0;
+    }
+
+    private void increment() {
+        this.count++;
+    }
+
+    private void decrement() {
+        this.count--;
+    }
+
+    private void displayPouf() {
+        jLabel1.setText("Pouf !");
+    }
+
+    private void displayCounter() {
+        jLabel1.setText(Integer.toString(this.count));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        cbStart = new javax.swing.JButton();
+        cbRecule = new javax.swing.JButton();
+        cbAvance = new javax.swing.JButton();
+        cbStop = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CounterAdvenced");
+
+        cbStart.setText("Start");
+        cbStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbStartActionPerformed(evt);
+            }
+        });
+
+        cbRecule.setText("Recule");
+        cbRecule.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbReculeActionPerformed(evt);
+            }
+        });
+
+        cbAvance.setText("Avance");
+        cbAvance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAvanceActionPerformed(evt);
+            }
+        });
+
+        cbStop.setText("Stop");
+        cbStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbStopActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("0");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cbStart)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbRecule)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbAvance)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbStop))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(68, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(56, 56, 56)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbStart)
+                    .addComponent(cbRecule)
+                    .addComponent(cbAvance)
+                    .addComponent(cbStop))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cbStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbStartActionPerformed
+        switch (state) {
+            case START:
+                state = STATE.RECULE_STOP;
+                activateState(state);
+                initCounter();
+                displayCounter();
+                break;
+            case RECULE_STOP:
+                // impossible
+                break;
+            case AVANCE_STOP:
+                // impossible
+                break;
+        }
+    }//GEN-LAST:event_cbStartActionPerformed
+
+    private void cbReculeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbReculeActionPerformed
+        switch (state) {
+            case START:
+                // impossible
+                break;
+            case RECULE_STOP:
+                state = STATE.AVANCE_STOP;
+                activateState(state);
+                break;
+            case AVANCE_STOP:
+                // impossible
+                break;
+        }
+    }//GEN-LAST:event_cbReculeActionPerformed
+
+    private void cbAvanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAvanceActionPerformed
+        switch (state) {
+            case START:
+                state = STATE.RECULE_STOP;
+                activateState(state);
+                initCounter();
+                displayCounter();
+                break;
+            case RECULE_STOP:
+                // impossible
+                break;
+            case AVANCE_STOP:
+                state = STATE.RECULE_STOP;
+                activateState(state);
+                break;
+        }
+    }//GEN-LAST:event_cbAvanceActionPerformed
+
+    private void cbStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbStopActionPerformed
+        switch (state) {
+            case START:
+                state = STATE.RECULE_STOP;
+                activateState(state);
+                initCounter();
+                displayCounter();
+                break;
+            case RECULE_STOP:
+                state = STATE.START;
+                activateState(state);
+                displayPouf();
+                break;
+            case AVANCE_STOP:
+                state = STATE.START;
+                activateState(state);
+                displayPouf();
+                break;
+        }
+    }//GEN-LAST:event_cbStopActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(CounterAdvenced.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(CounterAdvenced.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(CounterAdvenced.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(CounterAdvenced.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CounterAdvenced().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cbAvance;
+    private javax.swing.JButton cbRecule;
+    private javax.swing.JButton cbStart;
+    private javax.swing.JButton cbStop;
+    private javax.swing.JLabel jLabel1;
+    // End of variables declaration//GEN-END:variables
+}

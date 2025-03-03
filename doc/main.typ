@@ -362,3 +362,59 @@
 #figure(caption: [Capture d'écran de l'app Counter Advenced],
   image("img/CounterAdvenced.png", width: 50%)
 )
+#pagebreak()
+== Application de dessin
+
+- *Événements :* 
+  - (_3 boutons_) `cbLine`, `cbCercle`, `cbRectangle`
+  - (_2 Timer_) `timerAvanceActive`, `timerReculeActive`
+- *Actions :* `init()`, `A1`, `A2`
+- *Automate :* 
+
+#figure(caption: [Automate compteur avancé],
+ fletcher.diagram(
+    node-stroke: .08em,
+    spacing: 4em,
+
+    // Start
+    node((-1,-.5), radius: .2em, fill: black),
+    edge((-1,-.5), (0,0), "-|>", $("/")/(#raw("init()"))$, bend: 35deg), 
+    // edge((-1,-.5), (0,0), "-|>", $("/")/(#raw("init()"))$, bend: 45deg), 
+
+    // E1
+    node((0,0), $"E1"$, radius: 2em),
+    edge($(#raw("cbStart")"/")/(#raw("ini()"))$, "-|>", bend: 20deg),
+
+    // E2
+    node((1,0), $"E2"$, radius: 2em),
+    edge((0,0),$(#raw("cbStop")"/"n==30000)/(#raw("A2"))$, "-|>", bend: 35deg),
+    edge((1,0),$(#raw("timerAvanceActive")"/")/(#raw("A1"))$, "-|>", label-side: center, bend: 
+    130deg),
+    edge((2,0),$(#raw("cbRecule")"/")/()$, "-|>", bend: 20deg),
+
+    // E3
+    node((2,0), $"E3"$, radius: 2em),
+    edge((1,0),$(#raw("cbAvance")"/")/()$, "-|>", bend: 35deg),
+    edge((2,0),$(#raw("timerReculeActive")"/")/(#raw("A3"))$, "-|>", label-side: center, bend: 
+    130deg),
+    edge((0,0),$(#raw("cbStop")"/")/(#raw("A2"))$, "-|>", label-side: center, bend: 
+    75deg),
+  )
+)
+
+#figure(caption: [Matrice compteur],
+  table(columns: 7, inset: (x: .25em, y: 1em), stroke: 0.03em,
+    [],[`cbStart`], [`cbStop`], [`cbRecule`], [`cbAvance`], [`timerReculeActive`], [`timerAvanceActive`],
+    [$"START"\ "E1"$],[`init()` \ État "E2"],Interdit,Interdit,Interdit,Interdit,Interdit,
+
+    [$"RECULE_STOP"\ "E2"$],Interdit,[`A2` \ État "E1"],Interdit,[État "E3"],Interdit,[`A2` \ État "E2"],
+
+    [$"AVANCE_STOP"\ "E3"$],Interdit,[`A2` \ État "E1"],[État "E2"],Interdit,[`A2` \ État "E3"],Interdit,
+  )
+)
+- *Code :* `CounterAdvenced.java`
+
+
+#figure(caption: [Capture d'écran de l'app Counter Advenced],
+  image("img/CounterAdvenced.png", width: 50%)
+)
